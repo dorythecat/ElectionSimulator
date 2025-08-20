@@ -1,3 +1,7 @@
+const seats_input = document.getElementById("seats_input");
+const start_election_button = document.getElementById("start_election_button");
+const election_results = document.getElementById("election_results");
+
 const party_name_input = document.getElementById("party_name_input");
 const party_votes_input = document.getElementById("party_votes_input");
 const add_party_button = document.getElementById("add_party_button");
@@ -39,3 +43,30 @@ add_party_button.addEventListener("click", () => {
 
     generateList();
 });
+
+start_election_button.addEventListener("click", () => {
+    let seats = parseInt(seats_input.value);
+    if (seats <= 0) return;
+
+    // D'Hondt method (https://en.wikipedia.org/wiki/D%27Hondt_method)
+    let seats_per_party = {};
+    for (const party in parties) seats_per_party[party] = 0; // Initialize with 0 seats per party
+
+    while (seats > 0) {
+        let max_party = "";
+        let max_quot = 0;
+        for (const party in parties) {
+            let quot = parties[party] / (seats_per_party[party] + 1);
+            if (quot <= max_quot) continue;
+            max_quot = quot;
+            max_party = party;
+        }
+        seats_per_party[max_party] += 1;
+        seats -= 1;
+    }
+
+    election_results.innerHTML = "";
+    for (const party in seats_per_party) {
+        election_results.innerHTML += `<li>${party}: ${seats_per_party[party]}</li>`;
+    }
+})

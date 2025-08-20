@@ -10,10 +10,13 @@ let total_votes = 0;
 function generateList() {
     parties_list.innerHTML = "";
     for (const party in parties) {
+        let perc = parties[party] / total_votes;
+
         const party_element = document.createElement("li");
         party_element.innerHTML = `<strong>${party}</strong>: `;
         party_element.innerHTML += `<span>${parties[party]}</span> `;
-        party_element.innerHTML += `<span>(${(parties[party] / total_votes * 100).toFixed(2)}%)</span>`;
+        party_element.innerHTML += `<span>(${(perc * 100).toFixed(2)}%)</span> `;
+        party_element.innerHTML += `<progress value="${parties[party]}" max="${total_votes}"></progress>`;
         parties_list.appendChild(party_element);
     }
     const total_element = document.createElement("li");

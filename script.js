@@ -41,7 +41,6 @@ add_party_button.addEventListener("click", () => {
     party_votes_input.value = "";
     party_percentage_input.value = "";
 
-    if (party_name === "" || party_name in parties) return;
     if (party_votes === "" || party_votes <= 0) {
         if (party_percentage === "" || party_percentage <= 0 || party_percentage > 100) return;
         parties[party_name] = Math.round(total_votes_input.value * (party_percentage / 100));

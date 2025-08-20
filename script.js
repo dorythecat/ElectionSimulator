@@ -17,6 +17,7 @@ function generateList() {
     parties_list.innerHTML = "";
     for (const party in parties) {
         let perc = parties[party] / total_votes;
+        if (isNaN(perc)) perc = 0;
 
         const party_element = document.createElement("li");
         party_element.innerHTML = `<strong>${party}</strong>: `;

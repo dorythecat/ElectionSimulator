@@ -11,7 +11,9 @@ function generateList() {
     parties_list.innerHTML = "";
     for (const party in parties) {
         const party_element = document.createElement("li");
-        party_element.textContent = `${party}: ${parties[party]} : ${(parties[party] / total_votes * 100).toFixed(2)}%`;
+        party_element.innerHTML = `<strong>${party}</strong>: `;
+        party_element.innerHTML += `<span>${parties[party]}</span> `;
+        party_element.innerHTML += `<span>(${(parties[party] / total_votes * 100).toFixed(2)}%)</span>`;
         parties_list.appendChild(party_element);
     }
     const total_element = document.createElement("li");
@@ -22,6 +24,10 @@ function generateList() {
 add_party_button.addEventListener("click", () => {
     const party_name = party_name_input.value;
     const party_votes = party_votes_input.value;
+
+    // Clear the input fields
+    party_name_input.value = "";
+    party_votes_input.value = "";
 
     if (party_name === "" || party_votes === "" || party_name in parties) return;
 

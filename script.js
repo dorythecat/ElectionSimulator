@@ -2,8 +2,10 @@ const seats_input = document.getElementById("seats_input");
 const start_election_button = document.getElementById("start_election_button");
 const election_results = document.getElementById("election_results");
 
+const total_votes_input = document.getElementById("total_votes_input");
 const party_name_input = document.getElementById("party_name_input");
 const party_votes_input = document.getElementById("party_votes_input");
+const party_percentage_input = document.getElementById("party_percentage_input");
 const add_party_button = document.getElementById("add_party_button");
 
 const parties_list = document.getElementById("parties_list");
@@ -31,15 +33,19 @@ function generateList() {
 add_party_button.addEventListener("click", () => {
     const party_name = party_name_input.value;
     const party_votes = party_votes_input.value;
+    const party_percentage = party_percentage_input.value;
 
     // Clear the input fields
     party_name_input.value = "";
     party_votes_input.value = "";
+    party_percentage_input.value = "";
 
-    if (party_name === "" || party_votes === "" || party_name in parties) return;
-
-    parties[party_name] = parseInt(party_votes);
-    total_votes += parseInt(party_votes);
+    if (party_name === "" || party_name in parties) return;
+    if (party_votes === "" || party_votes <= 0) {
+        if (party_percentage === "" || party_percentage <= 0 || party_percentage > 100) return;
+        parties[party_name] = Math.round(total_votes_input.value * (party_percentage / 100));
+    } else parties[party_name] = parseInt(party_votes);
+    total_votes += parties[party_name];
 
     generateList();
 });

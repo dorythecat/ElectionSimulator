@@ -16,7 +16,7 @@ let total_votes = 0;
 function sortObject(obj) {
     let items = Object.keys(obj).map((key) => [key, obj[key]]);
     items.sort((first, second) => second[1] - first[1]);
-    return items.reduce(function(result, item) {
+    return items.reduce((result, item) => {
         result[item[0]] = item[1];
         return result;
     }, {});
@@ -45,18 +45,18 @@ function generateList() {
 
 add_party_button.addEventListener("click", () => {
     const party_name = party_name_input.value;
-    const party_votes = party_votes_input.value;
-    const party_percentage = party_percentage_input.value;
+    const party_votes = parseInt(party_votes_input.value);
+    const party_percentage = parseFloat(party_percentage_input.value);
 
     // Clear the input fields
     party_name_input.value = "";
     party_votes_input.value = "";
     party_percentage_input.value = "";
 
-    if (party_votes === "" || party_votes <= 0) {
-        if (party_percentage === "" || party_percentage <= 0 || party_percentage > 100) return;
+    if (isNaN(party_votes) || party_votes <= 0) {
+        if (isNaN(party_percentage) || party_percentage <= 0 || party_percentage > 100) return;
         parties[party_name] = Math.round(total_votes_input.value * (party_percentage / 100));
-    } else parties[party_name] = parseInt(party_votes);
+    } else parties[party_name] = party_votes;
     total_votes += parties[party_name];
 
     generateList();
@@ -64,23 +64,21 @@ add_party_button.addEventListener("click", () => {
 
 start_election_button.addEventListener("click", () => {
     let seats = parseInt(seats_input.value);
-    if (seats <= 0) return;
+    if (isNaN(seats) || seats <= 0) return;
 
     // D'Hondt method (https://en.wikipedia.org/wiki/D%27Hondt_method)
-    let seats_per_party = {};
-    for (const party in parties) seats_per_party[party] = 0; // Initialize with 0 seats per party
+
+    // Initialize with 0 seats per party
+    let seats_per_party = Object.fromEntries(Object.keys(parties).map(party => [party, 0]));
 
     while (seats > 0) {
-        let max_party = "";
-        let max_quot = 0;
+        let max_party = ["", 0]; // We store the party name with its quotient
         for (const party in parties) {
             let quot = parties[party] / (seats_per_party[party] + 1);
-            if (quot <= max_quot) continue;
-            max_quot = quot;
-            max_party = party;
+            if (quot > max_party[1]) max_party = [party, quot];
         }
-        seats_per_party[max_party] += 1;
-        seats -= 1;
+        seats_per_party[max_party[0]]++;
+        seats--;
     }
 
     election_results.innerHTML = "";

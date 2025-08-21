@@ -13,8 +13,20 @@ const parties_list = document.getElementById("parties_list");
 let parties = {};
 let total_votes = 0;
 
+function sortObject(obj) {
+    let items = Object.keys(obj).map((key) => [key, obj[key]]);
+    items.sort((first, second) => second[1] - first[1]);
+    return items.reduce(function(result, item) {
+        result[item[0]] = item[1];
+        return result;
+    }, {});
+}
+
 function generateList() {
     parties_list.innerHTML = "";
+
+    parties = sortObject(parties);
+
     for (const party in parties) {
         let perc = parties[party] / total_votes;
         if (isNaN(perc)) perc = 0;

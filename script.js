@@ -64,7 +64,7 @@ add_party_button.addEventListener("click", () => {
 
 start_election_button.addEventListener("click", () => {
     let seats = parseInt(seats_input.value);
-    if (isNaN(seats) || seats <= 0) return;
+    if (isNaN(seats) || seats <= 0 || Object.keys(parties).length === 0) return;
 
     // D'Hondt method (https://en.wikipedia.org/wiki/D%27Hondt_method)
 

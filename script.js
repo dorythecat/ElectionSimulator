@@ -87,4 +87,15 @@ start_election_button.addEventListener("click", () => {
         election_results.innerHTML += `<li>${party}: ${seats_per_party[party]}</li>`;
     }
     export_election_results.style.display = "block";
+    export_election_results.onclick = () => {
+        const blob = new Blob([election_results.innerText], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "election_results.txt";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
 })

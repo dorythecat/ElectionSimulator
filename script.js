@@ -83,16 +83,17 @@ start_election_button.addEventListener("click", () => {
     }
 
     election_results.innerHTML = "";
-    for (const party in seats_per_party) {
-        election_results.innerHTML += `<li>${party}: ${seats_per_party[party]}</li>`;
-    }
+    for (const party in seats_per_party) election_results.innerHTML += `<li>${party}: ${seats_per_party[party]}</li>`;
+
+    // Export election results button
     export_election_results.style.display = "block";
     export_election_results.onclick = () => {
-        const blob = new Blob([election_results.innerText], { type: "text/plain" });
+        const blob = new Blob([election_results.innerText.split(":").join("")],
+            { type: "text/csv" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "election_results.txt";
+        a.download = "election_results.csv";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

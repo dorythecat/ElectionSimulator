@@ -10,6 +10,7 @@ const party_percentage_input = document.getElementById("party_percentage_input")
 const add_party_button = document.getElementById("add_party_button");
 
 const parties_list = document.getElementById("parties_list");
+const export_parties = document.getElementById("export_parties");
 
 let parties = {};
 let total_votes = 0;
@@ -42,6 +43,21 @@ function generateList() {
     const total_element = document.createElement("li");
     total_element.innerHTML = `<h3>Total: ${total_votes}</h3>`;
     parties_list.appendChild(total_element);
+
+    // Export parties button
+    export_parties.style.display = "block";
+    export_parties.onclick = () => {
+        const blob = new Blob([parties_list.innerText.split(":").join("")],
+            { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "parties.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
 }
 
 add_party_button.addEventListener("click", () => {

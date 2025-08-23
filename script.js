@@ -1,6 +1,7 @@
 const seats_input = document.getElementById("seats_input");
 const start_election_button = document.getElementById("start_election_button");
 const election_results = document.getElementById("election_results");
+const export_election_results = document.getElementById("export_election_results");
 
 const total_votes_input = document.getElementById("total_votes_input");
 const party_name_input = document.getElementById("party_name_input");
@@ -85,4 +86,5 @@ start_election_button.addEventListener("click", () => {
     for (const party in seats_per_party) {
         election_results.innerHTML += `<li>${party}: ${seats_per_party[party]}</li>`;
     }
+    export_election_results.style.display = "block";
 })

@@ -47,7 +47,7 @@ function generateList() {
     // Export parties button
     export_parties.style.display = "block";
     export_parties.onclick = () => {
-        const blob = new Blob([parties_list.innerText.split(":").join("")],
+        const blob = new Blob([Object.keys(parties).map(party => `"${party}";"${parties[party]}"`).join("\n")],
             { type: "text/csv" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -104,7 +104,7 @@ start_election_button.addEventListener("click", () => {
     // Export election results button
     export_election_results.style.display = "block";
     export_election_results.onclick = () => {
-        const blob = new Blob([election_results.innerText.split(":").join("")],
+        const blob = new Blob([Object.keys(parties).map(party => `"${party}";"${seats_per_party[party]}"`).join("\n")],
             { type: "text/csv" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");

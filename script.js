@@ -135,15 +135,13 @@ import_parties.addEventListener("change", (event) => {
     const reader = new FileReader();
     reader.onload = (e) => {
         const lines = e.target.result.split("\n");
-        for (const line of lines) {
-            const [party, votes] = line.split(";");
-            const party_name = party.replace(/"/g, "").trim();
-            const party_votes = parseInt(votes.replace(/"/g, "").trim());
-            if (!isNaN(party_votes) && party_votes > 0) {
-                // Add votes to existing party if already present (should only happen if not replacing)
-                parties[party_name] = (parties[party_name] || 0) + party_votes;
-                total_votes += party_votes;
-            }
+        for (let line of lines) {
+            line = line.replace(/"/g, "").split(";");
+            const party_name = line[0].trim();
+            const party_votes = parseInt(line[1]);
+            if (isNaN(party_votes) && party_votes > 0) continue;
+            parties[party_name] = (parties[party_name] || 0) + party_votes;
+            total_votes += party_votes;
         } generateList();
     }; reader.readAsText(file);
 

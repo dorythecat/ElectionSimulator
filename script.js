@@ -12,6 +12,7 @@ const add_party_button = document.getElementById("add_party_button");
 const parties_list = document.getElementById("parties_list");
 const export_parties = document.getElementById("export_parties");
 const import_parties = document.getElementById("import_parties");
+const replace_parties = document.getElementById("replace_parties");
 
 let parties = {};
 let total_votes = 0;
@@ -126,6 +127,11 @@ import_parties.addEventListener("change", (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
+    if (replace_parties.checked) {
+        parties = {};
+        total_votes = 0;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
         const lines = e.target.result.split("\n");
@@ -134,8 +140,7 @@ import_parties.addEventListener("change", (event) => {
             const party_name = party.replace(/"/g, "").trim();
             const party_votes = parseInt(votes.replace(/"/g, "").trim());
             if (!isNaN(party_votes) && party_votes > 0) {
-                // Add votes to existing party if already present
-                // TODO: Add a selection to make the file replace or add to existing parties
+                // Add votes to existing party if already present (should only happen if not replacing)
                 parties[party_name] = (parties[party_name] || 0) + party_votes;
                 total_votes += party_votes;
             }

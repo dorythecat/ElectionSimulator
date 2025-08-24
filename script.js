@@ -11,6 +11,7 @@ const add_party_button = document.getElementById("add_party_button");
 
 const parties_list = document.getElementById("parties_list");
 const export_parties = document.getElementById("export_parties");
+const import_parties = document.getElementById("import_parties");
 
 let parties = {};
 let total_votes = 0;
@@ -119,4 +120,28 @@ start_election_button.addEventListener("click", () => {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
-})
+});
+
+import_parties.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const lines = e.target.result.split("\n");
+        for (const line of lines) {
+            const [party, votes] = line.split(";");
+            const party_name = party.replace(/"/g, "").trim();
+            const party_votes = parseInt(votes.replace(/"/g, "").trim());
+            if (!isNaN(party_votes) && party_votes > 0) {
+                // Add votes to existing party if already present
+                // TODO: Add a selection to make the file replace or add to existing parties
+                parties[party_name] = (parties[party_name] || 0) + party_votes;
+                total_votes += party_votes;
+            }
+        } generateList();
+    }; reader.readAsText(file);
+
+    // Clear the input value to allow re-importing the same file if needed
+    event.target.value = "";
+});
